@@ -4,11 +4,11 @@ services:
   psqlhms: 
     image: anzupop/spark_hive_cluster:postgresql-hms
     hostname: psqlhms
-    # volumes:
-    #   # postgresql-hms image specified init
-    #   - type: bind
-    #     source: ./postgresql-hms/init/init-hive-db.sh
-    #     target: /docker-entrypoint-initdb.d/init-user-db.sh
+    volumes:
+      # postgresql data
+      - type: bind
+        source: ./.persistence/db
+        target: /var/lib/postgresql/data
     environment:
       - POSTGRES_PASSWORD=hive
   node2:
@@ -80,6 +80,10 @@ services:
       - "8088:8088"
     entrypoint: /entrypoint.sh
     volumes:
+      # custom entrypoint
+      - type: bind
+        source: ./hive/exchange/
+        target: /exchange
       # custom entrypoint
       - type: bind
         source: ./hive/entrypoint.sh
@@ -235,7 +239,5 @@ services:
       - node2
       - node3
 
-# networks:
-#   hadoopnet:
     
 
