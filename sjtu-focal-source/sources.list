@@ -1,0 +1,20 @@
+# See http://help.ubuntu.com/community/UpgradeNotes for how to upgrade to
+# newer versions of the distribution.
+deb https://mirrors.sjtug.sjtu.edu.cn/ubuntu focal main restricted
+# deb-src https://mirrors.sjtug.sjtu.edu.cn/ubuntu focal main restricted
+deb https://mirrors.sjtug.sjtu.edu.cn/ubuntu focal-updates main restricted
+# deb-src https://mirrors.sjtug.sjtu.edu.cn/ubuntu focal-updates main restricted
+deb https://mirrors.sjtug.sjtu.edu.cn/ubuntu focal universe
+# deb-src https://mirrors.sjtug.sjtu.edu.cn/ubuntu focal universe
+deb https://mirrors.sjtug.sjtu.edu.cn/ubuntu focal-updates universe
+# deb-src https://mirrors.sjtug.sjtu.edu.cn/ubuntu focal-updates universe
+deb https://mirrors.sjtug.sjtu.edu.cn/ubuntu focal multiverse
+# deb-src https://mirrors.sjtug.sjtu.edu.cn/ubuntu focal multiverse
+deb https://mirrors.sjtug.sjtu.edu.cn/ubuntu focal-updates multiverse
+# deb-src https://mirrors.sjtug.sjtu.edu.cn/ubuntu focal-updates multiverse
+deb https://mirrors.sjtug.sjtu.edu.cn/ubuntu focal-backports main restricted universe multiverse
+# deb-src https://mirrors.sjtug.sjtu.edu.cn/ubuntu focal-backports main restricted universe multiverse
+deb http://archive.canonical.com/ubuntu focal partner
+# deb-src http://archive.canonical.com/ubuntu focal partner
+deb https://mirrors.sjtug.sjtu.edu.cn/ubuntu focal-security main restricted universe multiverse
+# deb-src https://mirrors.sjtug.sjtu.edu.cn/ubuntu focal-security main restricted universe multiverse

@@ -1,0 +1,241 @@
+version: '3.2'
+
+services:
+  psqlhms: 
+    image: anzupop/spark_hive_cluster:postgresql-hms
+    hostname: psqlhms
+    # volumes:
+    #   # postgresql-hms image specified init
+    #   - type: bind
+    #     source: ./postgresql-hms/init/init-hive-db.sh
+    #     target: /docker-entrypoint-initdb.d/init-user-db.sh
+    environment:
+      - POSTGRES_PASSWORD=hive
+  node2:
+    hostname: node2
+    image: anzupop/spark_hive_cluster:spark
+    entrypoint: /entrypoint.sh
+    volumes:
+      # custom entrypoint
+      - type: bind
+        source: ./spark/entrypoint.sh
+        target: /entrypoint.sh
+      # hadoop image specified
+      - type: bind
+        source: ./hadoop/conf/core-site.xml
+        target: /home/hadoop/hadoop/etc/hadoop/core-site.xml
+      - type: bind
+        source: ./hadoop/conf/hdfs-site.xml
+        target: /home/hadoop/hadoop/etc/hadoop/hdfs-site.xml
+      - type: bind
+        source: ./hadoop/conf/mapred-site.xml
+        target: /home/hadoop/hadoop/etc/hadoop/mapred-site.xml
+      - type: bind
+        source: ./hadoop/conf/yarn-site.xml
+        target: /home/hadoop/hadoop/etc/hadoop/yarn-site.xml
+      - type: bind
+        source: ./hadoop/conf/workers
+        target: /home/hadoop/hadoop/etc/hadoop/workers
+      # spark image specified
+      - type: bind
+        source: ./hadoop/conf/workers
+        target: /home/hadoop/spark/conf/slaves
+    depends_on:
+      - psqlhms
+  node3:
+    hostname: node3
+    image: anzupop/spark_hive_cluster:spark
+    entrypoint: /entrypoint.sh
+    volumes:
+      # custom entrypoint
+      - type: bind
+        source: ./spark/entrypoint.sh
+        target: /entrypoint.sh
+      # hadoop image specified
+      - type: bind
+        source: ./hadoop/conf/core-site.xml
+        target: /home/hadoop/hadoop/etc/hadoop/core-site.xml
+      - type: bind
+        source: ./hadoop/conf/hdfs-site.xml
+        target: /home/hadoop/hadoop/etc/hadoop/hdfs-site.xml
+      - type: bind
+        source: ./hadoop/conf/mapred-site.xml
+        target: /home/hadoop/hadoop/etc/hadoop/mapred-site.xml
+      - type: bind
+        source: ./hadoop/conf/yarn-site.xml
+        target: /home/hadoop/hadoop/etc/hadoop/yarn-site.xml
+      - type: bind
+        source: ./hadoop/conf/workers
+        target: /home/hadoop/hadoop/etc/hadoop/workers
+      # spark image specified
+      - type: bind
+        source: ./hadoop/conf/workers
+        target: /home/hadoop/spark/conf/slaves
+    depends_on:
+      - psqlhms
+  nodemaster:
+    hostname: nodemaster
+    image: anzupop/spark_hive_cluster:hive
+    ports:
+      - "8088:8088"
+    entrypoint: /entrypoint.sh
+    volumes:
+      # custom entrypoint
+      - type: bind
+        source: ./hive/entrypoint.sh
+        target: /entrypoint.sh
+      # hadoop image specified
+      - type: bind
+        source: ./hadoop/conf/core-site.xml
+        target: /home/hadoop/hadoop/etc/hadoop/core-site.xml
+      - type: bind
+        source: ./hadoop/conf/hdfs-site.xml
+        target: /home/hadoop/hadoop/etc/hadoop/hdfs-site.xml
+      - type: bind
+        source: ./hadoop/conf/mapred-site.xml
+        target: /home/hadoop/hadoop/etc/hadoop/mapred-site.xml
+      - type: bind
+        source: ./hadoop/conf/yarn-site.xml
+        target: /home/hadoop/hadoop/etc/hadoop/yarn-site.xml
+      - type: bind
+        source: ./hadoop/conf/workers
+        target: /home/hadoop/hadoop/etc/hadoop/workers
+      # spark image specified
+      - type: bind
+        source: ./hadoop/conf/workers
+        target: /home/hadoop/spark/conf/slaves
+      # hive image specified
+      - type: bind
+        source: ./hive/conf/hive-site.xml
+        target: /home/hadoop/hive/conf/hive-site.xml
+    depends_on:
+      - psqlhms
+      # - node2
+      # - node3
+  edge:
+    hostname: edge
+    image: anzupop/spark_hive_cluster:edge
+    entrypoint: /entrypoint.sh
+    volumes:
+      # custom entrypoint
+      - type: bind
+        source: ./edge/entrypoint.sh
+        target: /entrypoint.sh
+      # hadoop image specified
+      - type: bind
+        source: ./hadoop/conf/core-site.xml
+        target: /home/hadoop/hadoop/etc/hadoop/core-site.xml
+      - type: bind
+        source: ./hadoop/conf/hdfs-site.xml
+        target: /home/hadoop/hadoop/etc/hadoop/hdfs-site.xml
+      - type: bind
+        source: ./hadoop/conf/mapred-site.xml
+        target: /home/hadoop/hadoop/etc/hadoop/mapred-site.xml
+      - type: bind
+        source: ./hadoop/conf/yarn-site.xml
+        target: /home/hadoop/hadoop/etc/hadoop/yarn-site.xml
+      - type: bind
+        source: ./hadoop/conf/workers
+        target: /home/hadoop/hadoop/etc/hadoop/workers
+      # spark image specified
+      - type: bind
+        source: ./hadoop/conf/workers
+        target: /home/hadoop/spark/conf/slaves
+      # hive image specified
+      - type: bind
+        source: ./hive/conf/hive-site.xml
+        target: /home/hadoop/hive/conf/hive-site.xml
+    depends_on:
+      - psqlhms
+      - nodemaster
+      - node2
+      - node3
+  nifi:
+    hostname: nifi
+    image: anzupop/spark_hive_cluster:nifi
+    ports:
+      - "8080:8080"
+    entrypoint: /entrypoint.sh
+    volumes:
+      # custom entrypoint
+      - type: bind
+        source: ./nifi/entrypoint.sh
+        target: /entrypoint.sh
+      # nifi image specified
+      - type: bind
+        source: ./nifi/conf/nifi.properties
+        target: /home/hadoop/nifi/conf/nifi.properties
+    depends_on:
+      - psqlhms
+      - nodemaster
+      - node2
+      - node3
+  hue:
+    hostname: huenode
+    image: anzupop/spark_hive_cluster:hue
+    ports:
+      - "8888:8888"
+    volumes:
+      # hue image specified
+      - type: bind
+        source: ./hue/conf/hue.ini
+        target: /usr/share/hue/desktop/conf/hue.ini
+      - type: bind
+        source: ./hue/conf/hue.ini
+        target: /usr/share/hue/desktop/conf/hue-overrides.ini
+      - type: bind
+        source: ./hue/conf/hue.ini
+        target: /usr/share/hue/tools/docker/hue/conf/hue-overrides.ini
+      - type: bind
+        source: ./hive/conf/hive-site.xml
+        target: /etc/hive/conf/hive-site.xml
+    depends_on:
+      - psqlhms
+      - nodemaster
+      - node2
+      - node3
+  zeppelin:
+    hostname: zeppelin
+    image: anzupop/spark_hive_cluster:zeppelin
+    ports:
+      - "8081:8081"
+    entrypoint: /entrypoint.sh
+    volumes:
+      # custom entrypoint
+      - type: bind
+        source: ./zeppelin/entrypoint.sh
+        target: /entrypoint.sh
+      # hadoop image specified
+      - type: bind
+        source: ./hadoop/conf/core-site.xml
+        target: /home/hadoop/hadoop/etc/hadoop/core-site.xml
+      - type: bind
+        source: ./hadoop/conf/hdfs-site.xml
+        target: /home/hadoop/hadoop/etc/hadoop/hdfs-site.xml
+      - type: bind
+        source: ./hadoop/conf/mapred-site.xml
+        target: /home/hadoop/hadoop/etc/hadoop/mapred-site.xml
+      - type: bind
+        source: ./hadoop/conf/yarn-site.xml
+        target: /home/hadoop/hadoop/etc/hadoop/yarn-site.xml
+      - type: bind
+        source: ./hadoop/conf/workers
+        target: /home/hadoop/hadoop/etc/hadoop/workers
+      # spark image specified
+      - type: bind
+        source: ./hadoop/conf/workers
+        target: /home/hadoop/spark/conf/slaves
+      # hive image specified
+      - type: bind
+        source: ./hive/conf/hive-site.xml
+        target: /home/hadoop/hive/conf/hive-site.xml
+    depends_on:
+      - psqlhms
+      - nodemaster
+      - node2
+      - node3
+
+# networks:
+#   hadoopnet:
+    
+

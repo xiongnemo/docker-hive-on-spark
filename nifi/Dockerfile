@@ -1,0 +1,25 @@
+FROM anzupop/spark_hive_cluster:base
+
+MAINTAINER Nemo Xiong <nemo@anzupop.com>
+
+USER root
+
+# get nifi sources
+RUN wget https://mirrors.tongji.edu.cn/apache/nifi/1.12.1/nifi-1.12.1-bin.tar.gz -P /home/hadoop/ && \
+    tar -xzf /home/hadoop/nifi-1.12.1-bin.tar.gz -C /home/hadoop/ && \
+    mv /home/hadoop/nifi-1.12.1 /home/hadoop/nifi && \
+    rm -rf /home/hadoop/nifi-1.12.1*
+
+# set nifi-env.sh
+RUN echo -e "\n" >> /home/hadoop/nifi/bin/nifi-env.sh
+RUN echo "export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64" >> /home/hadoop/nifi/bin/nifi-env.sh
+RUN echo "export TOOLS_JAR=${JAVA_HOME}/lib/tools.jar" >> /home/hadoop/nifi/bin/nifi-env.sh
+
+# TODO: should mount config here
+# ADD configs/nifi.properties /home/hadoop/nifi/conf/nifi.properties
+RUN chown hadoop -R /home/hadoop/nifi
+
+# COPY ./nifi/entrypoint.sh /entrypoint.sh
+# RUN chmod +x /entrypoint.sh
+
+# ENTRYPOINT ["/entrypoint.sh"]
