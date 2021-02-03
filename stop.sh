@@ -1,6 +1,6 @@
 function stopServices {
   echo ">> Stopping Spark Master and slaves ..."
-  docker-compose exec dnodemaster stop-master.sh
+  docker-compose exec nodemaster stop-master.sh
   docker-compose exec node2 stop-slave.sh
   docker-compose exec node3 stop-slave.sh
   docker-compose exec nifi /home/hadoop/nifi/bin/nifi.sh stop
