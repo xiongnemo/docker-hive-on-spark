@@ -130,6 +130,7 @@ output:
 
 ```sql
 -- non-hive output snipped
-hive> select * from test.test_data where row3 > 2.499;FAILED: SemanticException [Error 10001]: Line 1:14 Table not found 'test_data'
+hive> select * from test.test_data where row3 > 2.499;
+FAILED: SemanticException [Error 10001]: Line 1:14 Table not found 'test_data'
 ```
 
