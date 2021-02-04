@@ -6,7 +6,7 @@ USER root
 
 # installing python for pyspark
 # change python version as per your requirement
-RUN apt install -y python python3
+RUN apt install -y python python3 python3-pip python-pip-whl
 
 # get scala sources
 RUN mkdir /usr/share/scala && \
@@ -27,9 +27,9 @@ RUN mkdir /usr/share/scala && \
     mv /home/hadoop/spark/conf/spark-defaults.conf.template /home/hadoop/spark/conf/spark-defaults.conf && \
     echo "spark.eventLog.dir file:/home/hadoop/spark/logs" >> /home/hadoop/spark/conf/spark-defaults.conf && \
     echo "spark.history.fs.logDirectory file:/home/hadoop/spark/logs" >> /home/hadoop/spark/conf/spark-defaults.conf && \
-    chown hadoop -R /home/hadoop/spark && \
     mkdir /home/hadoop/spark/logs && \
-    chown hadoop -R /home/hadoop/spark/logs
+    # permissions
+    chown hadoop -R /home/hadoop/spark
 
 # set environment variables
 ENV SCALA_HOME /usr/share/scala
