@@ -4,6 +4,8 @@ Hive on Spark, with Docker (compose). (Experimental)
 
 Based on [this](https://github.com/sciencepal/dockers/).
 
+**WARNING**: Docker image is not available now.
+
 **WARNING**: these images [ come | are shipped ] with pre-included ssh keys. Though no ssh service is exposed to the public, it's suggested to regenerate keys for all your services.
 
 ## Highlights
