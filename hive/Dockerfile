@@ -16,7 +16,10 @@ RUN wget https://mirrors.tongji.edu.cn/apache/hive/hive-3.1.2/apache-hive-3.1.2-
     cp /usr/share/java/postgresql-jdbc4.jar /home/hadoop/hive/lib/ && \
     echo "export HADOOP_HOME=/home/hadoop/hadoop" >> /home/hadoop/hive/bin/hive-config.sh && \
     # permissions
-    chown hadoop -R /home/hadoop/hive
+    chown hadoop -R /home/hadoop/hive && \
+    # hive on spark: jars
+    cp /home/hadoop/hive/lib/*.jar /home/hadoop/spark/jars/ && \
+    cp /home/hadoop/spark/jars/*.jar /home/hadoop/hive/lib/
 
 # set environment variables
 ENV HIVE_HOME /home/hadoop/hive
