@@ -6,6 +6,24 @@ Based on [this](https://github.com/sciencepal/dockers/).
 
 **WARNING**: these images [ come | are shipped ] with pre-included ssh keys. Though no ssh service is exposed to the public, it's suggested to regenerate keys for all your services.
 
+## Hadoop Stack Version
+
+Hadoop: `3.3.0`
+
+Spark: `2.4.7` (Scala: `2.12.8`)
+
+Hive: `3.1.2`
+
+Nifi: `1.12.1`
+
+Flume: `1.9.0`
+
+Kafka: `2.7.0`
+
+Sqoop: `1.4.7`
+
+Zeppelin: `0.9.0`
+
 ## Highlights
 
 * Hive on Spark is enabled by default.
@@ -51,6 +69,26 @@ docker-compose up
 ```bash
 ./stop.sh
 ```
+
+## Intergration with ElasticSearch
+
+You should prepare your `commons-httpclient-*.jar` and `elasticsearch-hadoop-*.jar` in the exchange dirs.
+
+In `nodemaster` (master):
+
+```bash
+cp exchange/elasticsearch-hadoop-*.jar $HIVE_HOME/lib/
+cp exchange/commons-httpclient-*.jar $HIVE_HOME/lib/
+```
+
+In `node*` (slave/worker):
+
+```bash
+cp /exchange/commons-httpclient-*.jar /home/hadoop/spark/jars/
+cp /exchange/elasticsearch-hadoop-*.jar /home/hadoop/spark/jars/
+```
+
+![](./doc/img/hive-on-spark-with-elasticsearch.png)
 
 ## Test
 
