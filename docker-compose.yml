@@ -13,9 +13,16 @@ services:
       - POSTGRES_PASSWORD=hive
   node2:
     hostname: node2
-    image: anzupop/spark_hive_cluster:spark
+    image: anzupop/spark_hive_cluster:hive
     entrypoint: /entrypoint.sh
+    ports:
+      # spark worker web UI port
+      - "20021:8081"
     volumes:
+      # exchange
+      - type: bind
+        source: ./spark/exchange/
+        target: /exchange
       # custom entrypoint
       - type: bind
         source: ./spark/entrypoint.sh
@@ -36,17 +43,35 @@ services:
       - type: bind
         source: ./hadoop/conf/workers
         target: /home/hadoop/hadoop/etc/hadoop/workers
+      - type: bind
+        source: ./hadoop/conf/hadoop-env.sh
+        target: /home/hadoop/hadoop/etc/hadoop/hadoop-env.sh
       # spark image specified
       - type: bind
         source: ./hadoop/conf/workers
         target: /home/hadoop/spark/conf/slaves
+      - type: bind
+        source: ./spark/conf/spark-env.sh
+        target: /home/hadoop/spark/conf/spark-env.sh
+      - type: bind
+        source: ./spark/conf/spark-defaults.conf
+        target: /home/hadoop/spark/conf/spark-defaults.conf
+    expose:
+      - "1-65535"
     depends_on:
       - psqlhms
   node3:
     hostname: node3
-    image: anzupop/spark_hive_cluster:spark
+    image: anzupop/spark_hive_cluster:hive
     entrypoint: /entrypoint.sh
+    ports:
+      # spark worker web UI port
+      - "20031:8081"
     volumes:
+      # exchange
+      - type: bind
+        source: ./spark/exchange/
+        target: /exchange
       # custom entrypoint
       - type: bind
         source: ./spark/entrypoint.sh
@@ -67,20 +92,34 @@ services:
       - type: bind
         source: ./hadoop/conf/workers
         target: /home/hadoop/hadoop/etc/hadoop/workers
+      - type: bind
+        source: ./hadoop/conf/hadoop-env.sh
+        target: /home/hadoop/hadoop/etc/hadoop/hadoop-env.sh
       # spark image specified
       - type: bind
         source: ./hadoop/conf/workers
         target: /home/hadoop/spark/conf/slaves
+      - type: bind
+        source: ./spark/conf/spark-env.sh
+        target: /home/hadoop/spark/conf/spark-env.sh
+      - type: bind
+        source: ./spark/conf/spark-defaults.conf
+        target: /home/hadoop/spark/conf/spark-defaults.conf
+    expose:
+      - "1-65535"
     depends_on:
       - psqlhms
   nodemaster:
     hostname: nodemaster
     image: anzupop/spark_hive_cluster:hive
     ports:
-      - "8088:8088"
+      # spark master web UI port
+      - "20010:8080"
+      # hadoop web UI port
+      - "20012:8088"
     entrypoint: /entrypoint.sh
     volumes:
-      # custom entrypoint
+      # exchange
       - type: bind
         source: ./hive/exchange/
         target: /exchange
@@ -104,16 +143,27 @@ services:
       - type: bind
         source: ./hadoop/conf/workers
         target: /home/hadoop/hadoop/etc/hadoop/workers
+      - type: bind
+        source: ./hadoop/conf/hadoop-env.sh
+        target: /home/hadoop/hadoop/etc/hadoop/hadoop-env.sh
       # spark image specified
       - type: bind
         source: ./hadoop/conf/workers
         target: /home/hadoop/spark/conf/slaves
+      - type: bind
+        source: ./spark/conf/spark-env.sh
+        target: /home/hadoop/spark/conf/spark-env.sh
+      - type: bind
+        source: ./spark/conf/spark-defaults.conf
+        target: /home/hadoop/spark/conf/spark-defaults.conf
       # hive image specified
       - type: bind
         source: ./hive/conf/hive-site.xml
         target: /home/hadoop/hive/conf/hive-site.xml
     depends_on:
       - psqlhms
+    expose:
+      - "1-65535"
       # - node2
       # - node3
   edge:
@@ -158,7 +208,7 @@ services:
     hostname: nifi
     image: anzupop/spark_hive_cluster:nifi
     ports:
-      - "8080:8080"
+      - "28080:8080"
     entrypoint: /entrypoint.sh
     volumes:
       # custom entrypoint
@@ -178,7 +228,7 @@ services:
     hostname: huenode
     image: anzupop/spark_hive_cluster:hue
     ports:
-      - "8888:8888"
+      - "28888:8888"
     volumes:
       # hue image specified
       - type: bind
@@ -202,7 +252,7 @@ services:
     hostname: zeppelin
     image: anzupop/spark_hive_cluster:zeppelin
     ports:
-      - "8081:8081"
+      - "28081:8081"
     entrypoint: /entrypoint.sh
     volumes:
       # custom entrypoint
