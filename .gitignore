@@ -1,2 +1,4 @@
 apache-mirrors
 .persistence
+commons-httpclient-*.jar
+elasticsearch-hadoop-*.jar
