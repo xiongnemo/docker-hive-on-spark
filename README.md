@@ -4,8 +4,6 @@ Hive on Spark, with Docker (compose). (Experimental)
 
 Based on [this](https://github.com/sciencepal/dockers/).
 
-**WARNING**: Docker image is not available now.
-
 **WARNING**: these images [ come | are shipped ] with pre-included ssh keys. Though no ssh service is exposed to the public, it's suggested to regenerate keys for all your services.
 
 ## Highlights
@@ -49,6 +47,8 @@ docker-compose up
 ```
 
 ## Test
+
+### General
 
 After hive initialization complete:
 
@@ -136,3 +136,42 @@ hive> select * from test.test_data where row3 > 2.499;
 FAILED: SemanticException [Error 10001]: Line 1:14 Table not found 'test_data'
 ```
 
+## Hive on Spark
+
+```sql
+select count(*) from test.test_data where row3 > 2.499;
+```
+
+output:
+
+```sql
+hive> select count(*) from test.test_data where row3 > 2.499;
+Query ID = hadoop_20210205123817_e20be050-c7ea-4002-a1a5-6773e649c2d1
+Total jobs = 1
+Launching Job 1 out of 1
+In order to change the average load for a reducer (in bytes):
+  set hive.exec.reducers.bytes.per.reducer=<number>
+In order to limit the maximum number of reducers:
+  set hive.exec.reducers.max=<number>
+In order to set a constant number of reducers:
+  set mapreduce.job.reduces=<number>
+Hive on Spark Session Web UI URL: http://node3:4040
+
+Query Hive on Spark job[0] stages: [0, 1]
+Spark job[0] status = RUNNING
+--------------------------------------------------------------------------------------
+          STAGES   ATTEMPT        STATUS  TOTAL  COMPLETED  RUNNING  PENDING  FAILED  
+--------------------------------------------------------------------------------------
+Stage-0 ........         0      FINISHED      1          1        0        0       0  
+Stage-1 ........         0      FINISHED      1          1        0        0       0  
+--------------------------------------------------------------------------------------
+STAGES: 02/02    [==========================>>] 100%  ELAPSED TIME: 14.18 s    
+--------------------------------------------------------------------------------------
+Spark job[0] finished successfully in 14.18 second(s)
+OK
+14
+Time taken: 29.342 seconds, Fetched: 1 row(s)
+hive> 
+```
+
+![](./doc/img/hive-on-spark.png)
