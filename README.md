@@ -40,6 +40,12 @@ You may want to use your own tag. Just remember to change all corresponding occu
 docker-compose up
 ```
 
+### Enter Hive
+
+```bash
+./enter-hive.sh
+```
+
 ### Stop
 
 ```bash
