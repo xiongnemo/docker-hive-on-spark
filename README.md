@@ -88,6 +88,16 @@ cp /exchange/commons-httpclient-*.jar /home/hadoop/spark/jars/
 cp /exchange/elasticsearch-hadoop-*.jar /home/hadoop/spark/jars/
 ```
 
+Modify `hive-site.xml`:
+
+```xml
+    <property>
+        <name>hive.aux.jars.path</name>
+        <value>/home/hadoop/hive/lib/elasticsearch-hadoop-*.jar,/home/hadoop/hive/lib/commons-httpclient-*.jar</value>
+        <description>A comma separated list (with no spaces) of the jar files</description>
+    </property>
+```
+
 ![](./doc/img/hive-on-spark-with-elasticsearch.png)
 
 ## Test

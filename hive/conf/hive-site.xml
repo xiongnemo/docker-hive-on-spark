@@ -48,11 +48,6 @@
         <value>false</value>
     </property>
     <property>
-        <name>hive.aux.jars.path</name>
-        <value>/home/hadoop/hive/lib/elasticsearch-hadoop-6.8.6.jar,/home/hadoop/hive/lib/commons-httpclient-3.1.jar</value>
-        <description>A comma separated list (with no spaces) of the jar files</description>
-    </property>
-    <property>
         <name>hive.execution.engine</name>
         <value>spark</value>
         <description>Hive on Spark</description>
