@@ -259,6 +259,11 @@ services:
       - type: bind
         source: ./zeppelin/entrypoint.sh
         target: /entrypoint.sh
+      # zeppelin config
+      - type: bind
+        source: ./zeppelin/conf/zeppelin-site.xml
+        target: /home/hadoop/zeppelin/conf/zeppelin-site.xml
+
       # hadoop image specified
       - type: bind
         source: ./hadoop/conf/core-site.xml
